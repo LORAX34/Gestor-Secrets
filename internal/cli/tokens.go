@@ -18,6 +18,15 @@ func cmdTokens(args []string) int {
 		return tokenList(rest)
 	case "revoke":
 		return tokenRevoke(rest)
+	case "-h", "--help", "help":
+		fmt.Print(`sec tokens — manage project-scoped API tokens
+
+Usage:
+  sec tokens create PROJECT [--name NAME] [--expires DATE]
+  sec tokens list [--project P] [--json]
+  sec tokens revoke ID
+`)
+		return 0
 	default:
 		return failUsage("sec tokens create|list|revoke ...")
 	}
@@ -28,8 +37,8 @@ func tokenCreate(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	name := fs.String("name", "default", "token name")
 	expires := fs.String("expires", "", "expiry (RFC3339)")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 1 {
 		return failUsage("sec tokens create PROJECT [--name NAME] [--expires DATE]")
@@ -65,8 +74,8 @@ func tokenList(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	project := fs.String("project", "", "filter by project")
 	jsonOut := fs.Bool("json", false, "print as JSON")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	v, _, err := openVault(*cfgFlag)
 	if err != nil {
@@ -98,8 +107,8 @@ func tokenList(args []string) int {
 func tokenRevoke(args []string) int {
 	fs := newFlagSet("tokens revoke ID")
 	cfgFlag := fs.String("config", "", "path to config file")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 1 {
 		return failUsage("sec tokens revoke ID")

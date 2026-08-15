@@ -24,8 +24,8 @@ func cmdExport(args []string) int {
 	envOut := fs.Bool("env", false, "export as KEY=VALUE lines")
 	jsonOut := fs.Bool("json", false, "export as JSON")
 	out := fs.String("out", "", "output file/dir")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 
 	cfg, err := loadConfigOnly(*cfgFlag)
@@ -140,8 +140,8 @@ func cmdImport(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	project := fs.String("project", "", "project to import into (required)")
 	typ := fs.String("type", "text", "secret type for imported entries")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 1 || *project == "" {
 		return failUsage("sec import FILE --project P [--type TYPE]")

@@ -55,9 +55,6 @@ func Run(args []string) int {
 		return cmdAudit(rest)
 	case "completions":
 		return cmdCompletions(rest)
-	case "help-usage":
-		printUsage()
-		return 0
 	default:
 		fmt.Fprintf(os.Stderr, "unknown command %q\n", cmd)
 		printUsage()

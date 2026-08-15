@@ -14,8 +14,8 @@ import (
 func cmdInit(args []string) int {
 	fs := newFlagSet("init")
 	cfgFlag := fs.String("config", "", "path to config file")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	cfgPath := configPath(*cfgFlag)
 	cfg, err := config.Load(cfgPath)
@@ -68,8 +68,8 @@ func cmdAdd(args []string) int {
 	tag := fs.String("tag", "", "tag (repeatable: --tag a --tag b)")
 	notes := fs.String("notes", "", "free-form notes")
 	expires := fs.String("expires", "", "expiry date (RFC3339, e.g. 2026-09-01T00:00:00Z)")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 3 {
 		return failUsage("sec add PROJECT NAME VALUE [--type text] [--tag TAG] [--notes NOTES] [--expires DATE]")
@@ -118,8 +118,8 @@ func cmdGet(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	env := fs.Bool("env", false, "print as KEY=VALUE lines")
 	jsonOut := fs.Bool("json", false, "print as JSON")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 1 {
 		return failUsage("sec get PROJECT [NAME] [--env] [--json]")
@@ -174,8 +174,8 @@ func cmdList(args []string) int {
 	project := fs.String("project", "", "filter by project")
 	tags := fs.String("tags", "", "filter by comma-separated tags")
 	jsonOut := fs.Bool("json", false, "print as JSON")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	v, _, err := openVault(*cfgFlag)
 	if err != nil {

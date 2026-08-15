@@ -13,8 +13,8 @@ func cmdStatus(args []string) int {
 	fs := newFlagSet("status")
 	cfgFlag := fs.String("config", "", "path to config file")
 	jsonOut := fs.Bool("json", false, "print as JSON")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 
 	cfg, err := config.Load(configPath(*cfgFlag))
@@ -76,8 +76,8 @@ func cmdAudit(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	limit := fs.Int("limit", 50, "number of entries")
 	jsonOut := fs.Bool("json", false, "print as JSON")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	v, _, err := openVault(*cfgFlag)
 	if err != nil {

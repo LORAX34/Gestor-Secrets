@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -22,17 +23,21 @@ func newFlagSet(name string) *flag.FlagSet {
 }
 
 // fsParse parses flags that may appear in any position (before or after
-// positional arguments). Returns false on parse errors.
-func fsParse(fs *flag.FlagSet, args []string) bool {
+// positional arguments). Returns 0 on success, 2 on parse error, 0 after
+// printing help for -h/--help.
+func fsParse(fs *flag.FlagSet, args []string) int {
 	reordered, err := reorderFlags(fs, args)
 	if err != nil {
 		fmt.Fprintln(fs.Output(), err)
-		return false
+		return 2
 	}
 	if err := fs.Parse(reordered); err != nil {
-		return false
+		if errors.Is(err, flag.ErrHelp) {
+			return 0
+		}
+		return 2
 	}
-	return true
+	return 0
 }
 
 // reorderFlags moves flags (and their values) ahead of positionals so that the
@@ -49,6 +54,10 @@ func reorderFlags(fs *flag.FlagSet, args []string) ([]string, error) {
 			name := strings.TrimLeft(a, "-")
 			if idx := strings.Index(name, "="); idx >= 0 {
 				name = name[:idx]
+			}
+			if name == "h" || name == "help" {
+				flags = append(flags, a)
+				continue
 			}
 			f := fs.Lookup(name)
 			if f == nil {

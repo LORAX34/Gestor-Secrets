@@ -12,8 +12,8 @@ import (
 func cmdUpdate(args []string) int {
 	fs := newFlagSet("update PROJECT NAME VALUE")
 	cfgFlag := fs.String("config", "", "path to config file")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 3 {
 		return failUsage("sec update PROJECT NAME VALUE")
@@ -44,8 +44,8 @@ func cmdRm(args []string) int {
 	fs := newFlagSet("rm PROJECT NAME")
 	cfgFlag := fs.String("config", "", "path to config file")
 	force := fs.Bool("force", false, "do not ask for confirmation")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 2 {
 		return failUsage("sec rm PROJECT NAME [--force]")
@@ -78,8 +78,8 @@ func cmdRotate(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	random := fs.Bool("random", false, "generate a random value (32 bytes)")
 	length := fs.Int("length", 32, "length in bytes when using --random")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 2 {
 		return failUsage("sec rotate PROJECT NAME [--random] [--length N]")
@@ -127,8 +127,8 @@ func cmdRollback(args []string) int {
 	fs := newFlagSet("rollback PROJECT NAME --version N")
 	cfgFlag := fs.String("config", "", "path to config file")
 	version := fs.Int("version", 0, "version to restore (required)")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 2 || *version <= 0 {
 		return failUsage("sec rollback PROJECT NAME --version N")
@@ -151,8 +151,8 @@ func cmdRollback(args []string) int {
 func cmdVersions(args []string) int {
 	fs := newFlagSet("versions PROJECT NAME")
 	cfgFlag := fs.String("config", "", "path to config file")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	if fs.NArg() < 2 {
 		return failUsage("sec versions PROJECT NAME")
@@ -176,8 +176,8 @@ func cmdVersions(args []string) int {
 func cmdRotateMaster(args []string) int {
 	fs := newFlagSet("rotate-master")
 	cfgFlag := fs.String("config", "", "path to config file")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 	pass, err := newMasterPassword()
 	if err != nil {

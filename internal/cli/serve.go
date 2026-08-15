@@ -17,8 +17,8 @@ func cmdServe(args []string) int {
 	cfgFlag := fs.String("config", "", "path to config file")
 	host := fs.String("host", "", "bind host (overrides config)")
 	port := fs.Int("port", 0, "bind port (overrides config)")
-	if !fsParse(fs, args) {
-		return 2
+	if code := fsParse(fs, args); code != 0 {
+		return code
 	}
 
 	cfg, err := config.Load(configPath(*cfgFlag))

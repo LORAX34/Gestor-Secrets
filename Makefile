@@ -12,7 +12,7 @@ vet:
 	go vet ./...
 
 install:
-	go install .
+	go build -o "$$(go env GOPATH)/bin/sec" .
 
 clean:
 	rm -rf bin dist
